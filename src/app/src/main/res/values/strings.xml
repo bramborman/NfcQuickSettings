@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">NFC Quick Settings</string>
+    <string name="nfc">NFC</string>
+    <string name="nfc_unavailable">NFC unavailable</string>
+</resources>

@@ -1,0 +1,4 @@
+<resources>
+    <color name="nfc">#3aaee4</color>
+    <color name="ic_app_background">@android:color/white</color>
+</resources>

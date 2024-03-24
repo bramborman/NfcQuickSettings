@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Rychlé nastavení NFC</string>
+    <string name="nfc">NFC</string>
+    <string name="nfc_unavailable">NFC není nedostupné</string>
+</resources>
