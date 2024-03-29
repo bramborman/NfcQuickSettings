@@ -1,1 +1,1 @@
-# NFC Quick Settings Tile
+# NFC Quick Settings
