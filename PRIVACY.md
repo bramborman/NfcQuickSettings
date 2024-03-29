@@ -1,4 +1,5 @@
-# Privacy Statement
+Privacy Statement
+=================
 
 This application serves only as a shortcut to Android system NFC settings page with a toggle-like visualization of the NFC state (On/Off/Unavailable).
 
