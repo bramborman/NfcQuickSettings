@@ -55,11 +55,6 @@ class NfcTileService : TileService() {
 
     override fun onTileAdded() {
         super.onTileAdded()
-
-        if (!isNfcAvailable) {
-            return
-        }
-
         updateQsTile()
     }
 
@@ -84,10 +79,6 @@ class NfcTileService : TileService() {
 
     override fun onClick() {
         super.onClick()
-
-        if (!isNfcAvailable) {
-            return
-        }
 
         unlockAndRun {
             val intent = Intent(Settings.ACTION_NFC_SETTINGS).apply {
