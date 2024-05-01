@@ -19,15 +19,11 @@ class NfcTileService : TileService() {
     private val nfcStateBroadcastReceiver by lazy { object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             assert(intent.action == NfcAdapter.ACTION_ADAPTER_STATE_CHANGED)
-
-            qsTile.apply {
-                state = when (intent.getIntExtra(NfcAdapter.EXTRA_ADAPTER_STATE, -1)) {
-                    NfcAdapter.STATE_ON -> Tile.STATE_ACTIVE
-                    NfcAdapter.STATE_OFF -> Tile.STATE_INACTIVE
-                    else -> Tile.STATE_UNAVAILABLE
-                }
-                updateTile()
-            }
+            updateQsTile(when (intent.getIntExtra(NfcAdapter.EXTRA_ADAPTER_STATE, -1)) {
+                NfcAdapter.STATE_ON -> Tile.STATE_ACTIVE
+                NfcAdapter.STATE_OFF -> Tile.STATE_INACTIVE
+                else -> Tile.STATE_UNAVAILABLE
+            })
         }
     }}
 
@@ -46,7 +42,7 @@ class NfcTileService : TileService() {
             registerReceiver(nfcStateBroadcastReceiver, intentFilter)
         }
 
-        updateState()
+        updateQsTile()
     }
 
     override fun onStopListening() {
@@ -64,16 +60,24 @@ class NfcTileService : TileService() {
             return
         }
 
-        updateState()
+        updateQsTile()
     }
 
-    private fun updateState() {
+    private fun updateQsTile(tileState: Int? = null) {
         qsTile.apply {
             state = when {
+                tileState != null -> tileState
                 !isNfcAvailable -> Tile.STATE_UNAVAILABLE
                 !nfcAdapter!!.isEnabled -> Tile.STATE_INACTIVE
                 else -> Tile.STATE_ACTIVE
             }
+            subtitle = getText(when (state) {
+                Tile.STATE_ACTIVE -> R.string.on
+                Tile.STATE_INACTIVE -> R.string.off
+                Tile.STATE_UNAVAILABLE -> R.string.unavailable
+                else -> throw IllegalStateException("Unexpected Quick Settings Tile state: $state")
+            })
+
             updateTile()
         }
     }
