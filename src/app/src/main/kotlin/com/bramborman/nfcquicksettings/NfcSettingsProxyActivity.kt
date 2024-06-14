@@ -7,7 +7,10 @@ class NfcSettingsProxyActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        startActivity(NfcManager.nfcSettingsIntent)
+        if (NfcManager(this).isAvailable) {
+            startActivity(NfcManager.nfcSettingsIntent)
+        }
+
         finish()
     }
 }
