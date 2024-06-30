@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId = "com.bramborman.nfcquicksettings"
-        minSdk = 29
+        minSdk = 24
         targetSdk = this@android.compileSdk
         versionCode = 2
         versionName = "1.1"

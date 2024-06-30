@@ -1,6 +1,7 @@
 package com.bramborman.nfcquicksettings
 
 import android.app.PendingIntent
+import android.graphics.drawable.Icon
 import android.os.Build
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
@@ -33,12 +34,23 @@ class NfcTileService : TileService() {
                 !nfcManager.isEnabled!! -> Tile.STATE_INACTIVE
                 else -> Tile.STATE_ACTIVE
             }
-            subtitle = getText(when (state) {
-                Tile.STATE_ACTIVE -> R.string.on
-                Tile.STATE_INACTIVE -> R.string.off
-                Tile.STATE_UNAVAILABLE -> R.string.unavailable
-                else -> throw IllegalStateException("Unexpected Quick Settings Tile state: $state")
-            })
+
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
+                icon = Icon.createWithResource(this@NfcTileService, when (state) {
+                    Tile.STATE_ACTIVE, Tile.STATE_UNAVAILABLE -> R.drawable.ic_nfc
+                    Tile.STATE_INACTIVE -> R.drawable.ic_nfc_off
+                    else -> 0 // Unreachable
+                })
+            }
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                subtitle = getText(when (state) {
+                    Tile.STATE_ACTIVE -> R.string.on
+                    Tile.STATE_INACTIVE -> R.string.off
+                    Tile.STATE_UNAVAILABLE -> R.string.unavailable
+                    else -> 0 // Unreachable
+                })
+            }
 
             updateTile()
         }
