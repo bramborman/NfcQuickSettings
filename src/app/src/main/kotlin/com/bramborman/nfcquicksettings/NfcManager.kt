@@ -26,8 +26,8 @@ class NfcManager(private val context: Context) {
             override fun onReceive(context: Context, intent: Intent) {
                 assert(intent.action == NfcAdapter.ACTION_ADAPTER_STATE_CHANGED)
                 updateQsTile(when (intent.getIntExtra(NfcAdapter.EXTRA_ADAPTER_STATE, -1)) {
-                    NfcAdapter.STATE_ON -> Tile.STATE_ACTIVE
-                    NfcAdapter.STATE_OFF -> Tile.STATE_INACTIVE
+                    NfcAdapter.STATE_ON, NfcAdapter.STATE_TURNING_ON -> Tile.STATE_ACTIVE
+                    NfcAdapter.STATE_OFF, NfcAdapter.STATE_TURNING_OFF -> Tile.STATE_INACTIVE
                     else -> Tile.STATE_UNAVAILABLE
                 })
             }
@@ -52,9 +52,10 @@ class NfcManager(private val context: Context) {
     }
 
     companion object {
-        public val nfcSettingsIntent
-            get() = Intent(Settings.ACTION_NFC_SETTINGS).apply {
+        public val nfcSettingsIntent by lazy {
+            Intent(Settings.ACTION_NFC_SETTINGS).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK
             }
+        }
     }
 }
