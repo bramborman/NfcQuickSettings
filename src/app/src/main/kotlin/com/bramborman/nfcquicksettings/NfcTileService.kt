@@ -6,22 +6,22 @@ import android.os.Build
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
 
-class NfcTileService : TileService() {
+public class NfcTileService : TileService() {
 
     private val nfcManager by lazy { NfcManager(this) }
 
-    override fun onStartListening() {
+    public override fun onStartListening() {
         super.onStartListening()
         nfcManager.startListening(::updateQsTile)
         updateQsTile()
     }
 
-    override fun onStopListening() {
+    public override fun onStopListening() {
         nfcManager.stopListening()
         super.onStopListening()
     }
 
-    override fun onTileAdded() {
+    public override fun onTileAdded() {
         super.onTileAdded()
         updateQsTile()
     }
@@ -56,7 +56,7 @@ class NfcTileService : TileService() {
         }
     }
 
-    override fun onClick() {
+    public override fun onClick() {
         super.onClick()
 
         unlockAndRun {

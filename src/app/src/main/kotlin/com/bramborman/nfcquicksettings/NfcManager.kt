@@ -9,7 +9,7 @@ import android.os.Build
 import android.provider.Settings
 import android.service.quicksettings.Tile
 
-class NfcManager(private val context: Context) {
+public class NfcManager(private val context: Context) {
     private val nfcAdapter: NfcAdapter? by lazy { NfcAdapter.getDefaultAdapter(context) }
     private val nfcStateBroadcastReceiverIntentFilter by lazy { IntentFilter(NfcAdapter.EXTRA_ADAPTER_STATE) }
     private var nfcStateBroadcastReceiver: BroadcastReceiver? = null
