@@ -1,4 +1,4 @@
-package com.bramborman.nfcquicksettings
+package com.bramborman.nfcquicksettings.internal
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -6,28 +6,27 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.nfc.NfcAdapter
 import android.os.Build
-import android.provider.Settings
-import android.service.quicksettings.Tile
 
-public class NfcManager(private val context: Context) {
+public class NfcStateManager(private val context: Context) {
     private val nfcAdapter: NfcAdapter? by lazy { NfcAdapter.getDefaultAdapter(context) }
     private var nfcStateBroadcastReceiver: BroadcastReceiver? = null
+    public val state: NfcState
+        get() {
+            if (nfcAdapter == null) {
+                return NfcState.UNAVAILABLE
+            }
 
-    public val isAvailable by lazy { nfcAdapter != null }
-    public val isEnabled get() = nfcAdapter?.isEnabled
+            return if (nfcAdapter!!.isEnabled) NfcState.ON else NfcState.OFF
+        }
 
-    public fun startListening(updateQsTile: (Int?) -> Unit) {
-        if (!isAvailable || nfcStateBroadcastReceiver != null) {
+    public fun startListening(onChange: (NfcState?) -> Unit) {
+        if (nfcStateBroadcastReceiver != null) {
             return
         }
 
         nfcStateBroadcastReceiver = object : BroadcastReceiver() {
-            override fun onReceive(context: Context, intent: Intent) {
-                updateQsTile(when (intent.getIntExtra(NfcAdapter.EXTRA_ADAPTER_STATE, -1)) {
-                    NfcAdapter.STATE_ON, NfcAdapter.STATE_TURNING_ON -> Tile.STATE_ACTIVE
-                    NfcAdapter.STATE_OFF, NfcAdapter.STATE_TURNING_OFF -> Tile.STATE_INACTIVE
-                    else -> Tile.STATE_UNAVAILABLE
-                })
+            public override fun onReceive(context: Context, intent: Intent) {
+                onChange(NfcState.fromNfcAdapterState(intent.getIntExtra(NfcAdapter.EXTRA_ADAPTER_STATE, -1)))
             }
         }
 
@@ -51,11 +50,5 @@ public class NfcManager(private val context: Context) {
 
     companion object {
         private val nfcStateBroadcastReceiverIntentFilter by lazy { IntentFilter(NfcAdapter.ACTION_ADAPTER_STATE_CHANGED) }
-
-        public val nfcSettingsIntent by lazy {
-            Intent(Settings.ACTION_NFC_SETTINGS).apply {
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            }
-        }
     }
 }
