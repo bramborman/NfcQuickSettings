@@ -46,7 +46,8 @@ public class NfcTileService : TileService() {
                 })
             }
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            // Android 16 (Baklava) doesn't show On/Off text on system tiles
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && Build.VERSION.SDK_INT < Build.VERSION_CODES.BAKLAVA) {
                 subtitle = getText(when (state) {
                     Tile.STATE_ACTIVE -> R.string.on
                     Tile.STATE_INACTIVE -> R.string.off
