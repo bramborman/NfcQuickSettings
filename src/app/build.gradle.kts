@@ -12,8 +12,8 @@ android {
     defaultConfig {
         applicationId = "com.bramborman.nfcquicksettings"
         minSdk = 24
-        versionCode = 5
-        versionName = "1.4"
+        versionCode = 6
+        versionName = "1.5"
     }
 
     namespace = defaultConfig.applicationId
